@@ -21,6 +21,7 @@ void_func_t first_touch [] = {
   first_touch_v1,
   first_touch_v2,
   NULL,
+
 };
 
 int_func_t compute [] = {
@@ -47,15 +48,50 @@ unsigned opencl_used [] = {
 ///////////////////////////// Version séquentielle simple
 
 
+int count_neighbors(int i, int j) {
+  if (i != 0 && j != 0 && i != DIM-1 && j != DIM -1) {
+
+    return ((int) cur_img(j-1, i-1) != 0)
+            + ((int) cur_img(j, i-1) != 0)
+            +  ((int) cur_img(j+1, i-1) != 0)
+            + ((int) cur_img(j+1, i) != 0)
+            + ((int) cur_img(j+1, i+1) != 0)
+            + ((int) cur_img(j, i+1) != 0)
+            + ((int) cur_img(j-1, i+1) != 0)
+            + ((int) cur_img(j-1, i) != 0);
+          }
+
+    if (i == 0 && j != 0)
+    {
+      return ((int) cur_img(j+1, i) != 0)
+            + ((int) cur_img(j+1, i+1) != 0)
+            + ((int) cur_img(j, i+1) != 0)
+            + ((int) cur_img(j-1, i+1) != 0)
+            + ((int) cur_img(j-1, i) != 0);
+          }
+
+    }
+}
+
+
 unsigned compute_v0 (unsigned nb_iter)
 {
 
   for (unsigned it = 1; it <= nb_iter; it ++) {
     for (int i = 0; i < DIM; i++)
       for (int j = 0; j < DIM; j++)
-	next_img (i, j) = cur_img (j, i);
-    
-    swap_images ();
+
+       int nb_neighbor = count_neighbors(i, j);
+        if (nb_neighbor < 2 || nb_neighbor > 3)
+            next_img (i, j) = 0;
+        else if (nb_neighbor == 2 && cur_img(i, j) != 0)
+            next_img(i, j) = cur_img(i, j);
+        else if (nb_neighbor == 3)
+            next_img(i, j) = 1;
+
+	      //next_img (i, j) = cur_img (j, i);
+
+        swap_images ();
   }
   // retourne le nombre d'étapes nécessaires à la
   // stabilisation du calcul ou bien 0 si le calcul n'est pas
@@ -63,6 +99,12 @@ unsigned compute_v0 (unsigned nb_iter)
   return 0;
 }
 
+
+  // retourne le nombre d'étapes nécessaires à la
+  // stabilisation du calcul ou bien 0 si le calcul n'est pas
+  // stabilisé au bout des nb_iter itérations
+  return 0;
+}
 
 ///////////////////////////// Version OpenMP de base
 
@@ -73,7 +115,7 @@ void first_touch_v1 ()
 #pragma omp parallel for
   for(i=0; i<DIM ; i++) {
     for(j=0; j < DIM ; j += 512)
-      next_img (i, j) = cur_img (i, j) = 0 ;
+      next_img(i, j) = cur_img (i, j) = 0 ;
   }
 }
 
