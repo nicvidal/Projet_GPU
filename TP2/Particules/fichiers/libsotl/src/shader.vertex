@@ -1,0 +1,32 @@
+#version 120
+
+uniform float PointSize;
+
+uniform vec3 MinExt, MaxExt;
+
+varying vec3 lightdir;
+varying vec4 color;
+
+void main()
+{
+  vec4 vert = gl_Vertex;
+  vec4 pos = gl_ModelViewMatrix * vert;
+
+  // output the transformed vertex
+  gl_Position = gl_ProjectionMatrix * pos;
+
+  // set point sprite size according to depth
+  gl_PointSize = PointSize / gl_Position.w;
+
+  // compute light direction
+  lightdir = normalize(gl_LightSource[0].position.xyz - vec3(pos));
+
+  if(vert.x < MinExt[0] || vert.x > MaxExt[0] ||
+     vert.y < MinExt[1] || vert.y > MaxExt[1] ||
+     vert.z < MinExt[2] || vert.z > MaxExt[2]) {
+    color = vec4(0.7, 0.7, 0.7, 0.5);
+  } else {
+    color = gl_Color;
+  }
+
+}

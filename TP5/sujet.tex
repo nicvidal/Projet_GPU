@@ -1,0 +1,213 @@
+\documentclass[A4wide]{article}
+\usepackage[french]{babel}
+\usepackage[latin9]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+\usepackage{fullpage}
+\title{Parallélisme imbriqué en OpenMP}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+% Rappel : par défaut OpenMP utilise autant de threads que le système
+% d'exploitation lui présente de c½urs. Cependant, le nombre de threads
+% peut être fixé depuis le shell via une variable d'environnement :
+
+% \verb#OMP_NUM_THREADS=4 ./a.out#
+
+% De même il est possible de définir une politique de distribution des indices
+% en utilisant de façon combinée la variable  \verb#OMP_SCHEDULE# et la
+% politique de distribution \verb#schedule(runtime)#.
+
+% Par exemple : \verb#OMP_SCHEDULE="STATIC,4" ./a.out#
+
+
+% Pour autoriser la création d'équipes de threads imbriquées  on doit
+%  appeler \verb#omp_set_nested(1)# ou bien utiliser une variable
+%  d'environnement   \verb#OMP_NESTED="True"# .
+
+\section{Le problème du voyageur de commerce}
+
+On cherche à optimiser une tournée d'un commercial, tournée passant
+par un ensemble de villes et revenant à son point départ. Ici on
+considère un espace euclidien dans lequel les villes sont toutes
+connectées deux à deux.
+
+
+\subsection{Quelques mots sur le code}
+
+Le nombre de villes est contenu dans \verb#NrTowns# et la variable
+\verb#minimun# contient la longueur de la plus petite tournée connue.
+
+Lors d'un appel \verb#void tsp (hops, len, path)#, le paramètre
+\verb#path# contiendra un chemin de \verb#hops# entiers (villes) tous
+distincts ; la longueur de ce chemin est \verb#len#. 
+
+La variable \verb#grain# contient le niveau de parallélisme imbriqué
+demandé (0 - pas de parallélisme; 1 - une seule équipe de thread est
+créée au premier niveau de l'arbre de recherche ; 2 - des équipes de
+threads sont en plus créées au niveau 2 de l'arbre, etc).
+
+\subsection{Version séquentielle}
+Étudiez rapidement l'implémentation fournie. Essayez-la pour vérifier
+qu'elle fonctionne (avec 12 villes et une \verb#seed# 1234, on trouve
+un chemin minimal 278). Vous pouvez décommenter l'appel à
+\verb#printPath# pour observer la solution, mais pour les mesures de
+performances on ne gardera pas l'affichage. À des fins de calcul
+d'accélération, mesurer le temps nécessaire pour le cas 13 villes et
+une \verb#seed# 1234.
+
+\section{Parallélisation en créant de nombreux threads}
+
+Dupliquer le répertoire source. Puis insérer le pragma suivant :
+
+\verb+#pragma omp parallel for if (hops <= grain)+
+
+juste avant la boucle
+
+\verb_for (i=0; i < NrTowns; i++)_
+
+de la fonction \verb+tsp+.
+
+Poursuivez la parallélisation du code en faisant attention aux
+variables partagées ou privées. Par exemple il s'agit d'éviter aux
+threads de tous travailler sur un unique et même tableau. Notons qu'un
+tableau ne peut être rendu privé, il est donc nécessaire de recopier
+le tableau \verb+path+ dans un nouveau tableau (alloué dans la
+pile). Protégez également les accès concurents à la variable
+\verb#minimun#.
+
+Observez les performances obtenues en faisant varier le paramètre
+graine (3ième paramètres). Notons que pour créer des threads
+récursivement il faut positionner la variable d'environnement
+\verb+OMP_NESTED+ à \verb+true+ (ou bien faire l'appel
+\verb#omp_set_nested(1)#) car, par défaut, le support d'exécution
+d'OpenMP empêche la création récursive de threads.
+
+
+Les perfomances obtenues ne devraient pas être terrible du tout car ce 
+programme recopie beaucoup trop de chemins et, de plus, l'utilisation 
+du pragma parallel a un surcoût même lorsque qu'une clause \texttt{if}
+désactive le parallélisme.
+
+\subsection{Optimisations de la parallélisation}
+
+Tout d'abord il s'agit d'éliminer les surcoûts inutiles en dupliquant
+ainsi le code :
+
+\begin{verbatim}
+if (hops <= grain) { // version parallèle
+#pragma omp parallel for ...
+    for (i=1; i < NrTowns; i++) {
+        ...
+    }
+} else { // version séquentielle
+    for (i=1; i < NrTowns; i++) {
+        ...
+    }
+}
+\end{verbatim}
+
+Ensuite il faut faire en sorte de ne créer que le nombre nécessaire de
+threads et, par conséquent, d'utiliser une politique de répartition
+dynamique.
+
+Enfin on observe qu'il n'est pas utile de protéger par une section
+critique tous les accès à la variable minimum : seules doivent se faire
+en section critique les comparaisons susceptible d'entrainer une
+modification du minimum.
+
+Observer les performances obtenus pour différents grains.
+
+
+\section{Parallélisation à l'aide de la directive collapse}
+
+Dupliquer le répertoire source initial. Puis insérer la fonction
+suivante et l'appeler directement dans le main() :
+
+\begin{verbatim}
+void par_tsp ()
+{
+  int i,j,k;
+#pragma omp parallel for collapse(3) schedule(runtime) 
+ for (i=1; i < NrTowns; i++)
+   for(j=1; j < NrTowns; j++)
+     for(k=1; k < NrTowns; k++)
+       if(i != j && i != k && j != k)
+         {
+          int chemin[NrTowns];
+          chemin[0] = 0;
+          chemin[1] = i;
+          chemin[2] = j;
+          chemin[3] = k;
+          int dist = distance[0][i] + distance[i][j] + distance[j][k];
+          tsp (4, dist, chemin) ;
+         }
+}
+\end{verbatim}
+
+Calculer les accélérations obtenues pour le cas (13 villes et seed
+1234) pour les codes suivants : collapse + distribution dynamique ;
+collapse + distribution statique ; équipes imbriquées.
+
+
+\section{Optimisation de nature algorithmique}
+
+Clairement, il est inutile de poursuivre l'évaluation d'un début de
+chemin lorsque sa longueur est supérieure au minimum courant
+(correspondant à la longueur du chemin complet le plus petit qu'on a
+déjà trouvé). Pour mettre en oeuvre cette optimisation insérer le test
+suivant au début des trois versions du tsp.
+
+\begin{verbatim}
+ if (len +  distance[0][path[hops-1]]>= minimum)
+     return;
+\end{verbatim}
+
+
+
+En considérant le cas \og 15 villes, seed 1234\fg{}, calculer à
+nouveau les accélérations obtenues par les différentes suivantes :
+collapse + distribution dynamique ; collapse + distribution statique ;
+équipes imbriquées. Est-ce surprenant ? 
+
+Un des effets de cette optimisation est de désiquilibrer le calcul car
+sans cette optimisation l'analyse des chemins est exhaustive.  Ainsi
+l'analyse engendrée par deux débuts de chemins de $k$ villes
+nécessitent le même nombre d'opérations : leur complexité ne dépend
+finalement que $k$ et du nombre de villes. Le code optimisé à un
+comportement beaucoup moins prévisible car la complexité du calcul va
+dépendre des résultats intermédiaires. On dit que le code optimisé a
+un comportement irrégulier. 
+
+Généralement on recommande l'utilisation d'une approche dynamique pour
+traiter les applications irrégulières (et une approche statique
+autrement).  Dans ce cadre comment expliquer les résultats obtenus ?
+
+\section{Parallélisation à l'aide de tâches d'OpenMP}
+
+Dupliquer le répertoire source initial pour paralléliser l'application
+à l'aide de tâches. Au niveau du main() il s'agit de créer une équipe
+de threads et de faire en sorte qu'un seul thread démarre
+l'analyse. Au niveau de la fonction tsp lancer l'analyse en faisant en
+sorte de ne créer des tâches parallèles que jusqu'au niveau
+\texttt{grain}. Deux techniques d'allocation mémoire sont à comparer :
+\begin{enumerate}
+\item allocation dynamique : un tableau est alloué dynamiquement et
+  initialisé avant la création de la tâche - ce tableau sera libéré à
+  la fin de la tâche;
+\item allocation automatique : le tableau est une variable locale
+  allouée et initialisée dans la tâche - il est alors nécessaire
+  d'utiliser la directive taskwait après avoir créé toutes les tâches filles.
+\end{enumerate}
+
+Comparer les performance obtenues par les deux approches sur le cas 15
+villes et seed 1234 pour des grains variant de 1 à 9. Comparer à
+celles obtenues à l'aide des techniques \emph{imbriquées} et \emph{collapse}.
+
+Relever ensuite le(s) meilleur(s) grain(s) pour 12 et 24
+threads. Calculer les accélérations obtenues.
+
+\end{document}

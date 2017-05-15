@@ -1,0 +1,164 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.2.22)  6 MAR 2017 15:59
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**\nonstopmode \input{sujet.tex}
+(./sujet.tex (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2016/04/23 3.9r The Babel package
+
+(/usr/share/texlive/texmf-dist/tex/generic/babel-french/frenchb.ldf
+Language: frenchb 2017/01/15 v3.2f French support from the babel system
+
+(/usr/share/texlive/texmf-dist/tex/generic/babel/babel.def
+File: babel.def 2016/04/23 3.9r Babel common definitions
+\babel@savecnt=\count87
+\U@D=\dimen103
+)
+\l@acadian = a dialect from \language\l@french 
+\l@canadien = a dialect from \language\l@french 
+\FB@nonchar=\count88
+\FBcolonskip=\skip43
+\FBthinskip=\skip44
+Package babel Info: Making : an active character on input line 365.
+Package babel Info: Making ; an active character on input line 366.
+Package babel Info: Making ! an active character on input line 367.
+Package babel Info: Making ? an active character on input line 368.
+\FBguillskip=\skip45
+\FBguill@level=\count89
+\FB@everypar=\toks14
+\FB@Mht=\dimen104
+\mc@charclass=\count90
+\mc@charfam=\count91
+\mc@charslot=\count92
+\std@mcc=\count93
+\dec@mcc=\count94
+\listindentFB=\skip46
+\descindentFB=\skip47
+\labelwidthFB=\skip48
+\leftmarginFB=\skip49
+\parindentFFN=\dimen105
+\FBfnindent=\skip50
+))
+(/usr/share/texlive/texmf-dist/tex/latex/carlisle/scalefnt.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2015/03/17 v1.2c Input encoding file
+\inpenc@prehook=\toks16
+\inpenc@posthook=\toks17
+
+(/usr/share/texmf/tex/latex/html/latin9.def
+File: latin1.def 1998/03/05 v0.97 Input encoding file(test version: still liabl
+e to change)
+))
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2017/01/24 v2.0c Standard LaTeX package
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.def
+File: t1enc.def 2017/01/24 v2.0c Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
+))
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/palatino.sty
+Package: palatino 2005/04/12 PSNFSS-v9.2a (SPQR) 
+)
+(/usr/share/texlive/texmf-dist/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip51
+)
+
+LaTeX Warning: Unused global option(s):
+    [A4wide].
+
+(./sujet.aux)
+\openout1 = `sujet.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Try loading font information for T1+ppl on input line 10.
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ppl.fd
+File: t1ppl.fd 2001/06/04 font definitions for T1/ppl.
+)
+LaTeX Info: Redefining \degres on input line 10.
+LaTeX Info: Redefining \dots on input line 10.
+LaTeX Info: Redefining \up on input line 10.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 11.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 11.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 11.
+
+
+LaTeX Warning: No \author given.
+
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <14.4> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 31.
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <12> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 39.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 41.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1pcr.fd
+File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
+)
+Overfull \hbox (2.98914pt too wide) in paragraph at lines 74--81
+[]\T1/ppl/m/n/10 Poursuivez la pa-ral-lé-li-sa-tion du code en fai-sant at-ten-
+tion aux va-riables par-ta-gées ou pri-vées. Par exemple
+ []
+
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 178.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 178.
+ [3] (./sujet.aux) ) 
+Here is how much of TeX's memory you used:
+ 1720 strings out of 493013
+ 22476 string characters out of 6135682
+ 86544 words of memory out of 5000000
+ 5284 multiletter control sequences out of 15000+600000
+ 17285 words of font info for 38 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 29i,6n,30p,202b,439s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+urw/palatino/uplri8a.pfb>
+Output written on sujet.pdf (3 pages, 76987 bytes).
+PDF statistics:
+ 35 PDF objects out of 1000 (max. 8388607)
+ 24 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

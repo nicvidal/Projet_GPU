@@ -1,0 +1,26 @@
+#version 120
+
+varying vec3 lightdir;
+varying vec4 color;
+
+void
+main()
+{
+    vec3 n;
+    float cos;
+    float coord;
+
+    n.xy = 2.0 * gl_PointCoord - vec2(1.0, 1.0);
+    cos = dot(n.xy, n.xy);	
+    if (cos > 1.0) discard;   // kill pixels outside circle
+    n.z = sqrt(1.0-cos);
+
+    float diffuse = max(0.0, dot(lightdir, n)) * 0.95 + 0.05;
+
+    // Setting Pixel Color
+    gl_FragColor.xyz = vec3(color) * diffuse;
+    gl_FragColor.w = color.w;
+
+    //coord = gl_FragCoord.z;
+   // gl_FragDepth = coord.z - n.z;
+}

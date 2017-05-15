@@ -1,0 +1,99 @@
+\documentclass[A4wide]{article}
+\usepackage[french]{babel}
+\usepackage[latin9]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+\usepackage{fullpage}
+\title{Tâches OpenMP}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Deux tâches}
+Modifiez le programme \texttt{deux-taches.c} pour qu'il exécute deux tâches en parallèle : chaque
+tâche écrira un mot et le numéro du thread qui l'exécute.
+
+\section{For en tâches}
+Modifiez le programme \texttt{for-en-taches.c} afin que les indices
+soient distribués au moyen de tâches tout en conservant un
+comportement globalement similaire.
+
+
+\section{Taskwait vs Barrier}
+Lancez plusieurs fois le programme \texttt{task-wait.c}  avec 4 threads.
+Utilisez les trace produites pour analyser finement  le comportement du programme. 
+Remplacer la directive \verb#taskwait# par une directive
+\verb#barrier#. Observez les traces produites. Conclure.
+
+
+\section{Tâches et durée de vie des variables locales}
+Lancez plusieurs fois le programme \texttt{task.c}  et analysez le
+comportement du programme.  Observez ensuite le comportement du
+programme lorsque  la directive \verb#taskwait# est commentée.
+
+Pour l'annecdote, observez que gcc sérialise l'exécution des tâches lorsque la
+clause \verb#shared(chaine)# est remplacée par
+\verb#firstprivate(chaine)#. 
+
+\section{Parallélisation du TSP à l'aide de tâches OpenMP}
+Dupliquer le répertoire source initial pour paralléliser l'application
+à l'aide de tâches. Au niveau du main() il s'agit de créer une équipe
+de threads et de faire en sorte qu'un seul thread démarre
+l'analyse. Au niveau de la fonction tsp lancer l'analyse en faisant en
+sorte de ne créer des tâches parallèles que jusqu'au niveau
+\texttt{grain}. Deux techniques d'allocation mémoire sont à comparer :
+\begin{enumerate}
+\item allocation dynamique : un tableau est alloué dynamiquement et
+  initialisé avant la création de la tâche - ce tableau sera libéré à
+  la fin de la tâche;
+\item allocation automatique : le tableau est une variable locale
+  allouée et initialisée dans la tâche - il est alors nécessaire
+  d'utiliser la directive taskwait après avoir créé toutes les tâches filles.
+\end{enumerate}
+
+Comparer les performance obtenues par les deux approches sur le cas 15
+villes et seed 1234 pour des grains variant de 1 à 9. Comparer à
+celles obtenues à l'aide des techniques \emph{imbriquées} et \emph{collapse}.
+
+Relever ensuite le(s) meilleur(s) grain(s) pour 12 et 24
+threads. Calculer les accélérations obtenues.
+
+\section{Dépendances entre tâches}
+
+Dans le programme suivant les tâches peuvent être exécutées dans un
+ordre aléatoire. Il s'agit de faire en sorte qu'une tâche traitant le
+couple d'indices \texttt{(i,j)} doivent attendre que les tâches
+traitant  les couples \texttt{(i-1,j)}  et \texttt{(i,j-1)}  soient
+terminées pour pouvoir être exécutée.
+
+\begin{verbatim}
+
+int main (int argc, char **argv)
+{
+  int A[T][T];;
+  int i,j;
+
+  int k = 0;
+  
+  for (i=0; i < T; i++ )
+     for (j=0; j < 10; j++ )
+#pragma omp task firstprivate(i,j)
+#pragma omp atomic capture
+        A[i][j] = k++; 
+
+ for (i=0; i < T; i++ )
+    {
+      puts("");
+     for (j=0; j < T; j++ )
+       printf(" %2d ",A[i][j]) ;
+    }
+}
+\end{verbatim}
+
+
+
+
+
+
+\end{document}

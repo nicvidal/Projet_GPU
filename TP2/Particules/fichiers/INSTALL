@@ -1,0 +1,22 @@
+== Compilation ==
+
+This project uses CMake to build the source code.
+
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/path
+make
+make install
+
+== CMake command line options ==
+
+- USE_DOUBLE=ON/OFF         Enable/disable double floating precision
+- DISABLE_OPENMP=On/OFF     Enable/disable OpenMP support
+- DISABLE_OPENGL=On/OFF     Enable/disable OpenGL support
+
+== Dependencies ==
+
+- OpenCL >= 1.2 (required)
+- libmath (required)
+- OpenMP (optional)
+- OpenGL & GLUT (optional)
